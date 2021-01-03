@@ -1,6 +1,6 @@
 <?php
 /*
-Class ZiraatBank
+Class Garanti
 @author Selim Hallaç
 @blog selimhallac.com
 */
