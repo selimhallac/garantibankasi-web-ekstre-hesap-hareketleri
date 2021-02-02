@@ -9,12 +9,14 @@ class Garanti {
   public $kurumKodu = "";
   public $parola = "";
   public $token = "";
+  public $IBAN = "";
   public $url = "https://inboundrstintws.garanti.com.tr/services/FirmAccountActivitySoap";
-  function __construct($kurumkodu,$parola,$key)
+  function __construct($kurumkodu,$parola,$key,$IBAN)
   {
-    $this->$kurumKodu = $kurumkodu;
+    $this->kurumKodu = $kurumkodu;
     $this->parola = $parola;
     $this->token = $key;
+    $this->IBAN = $IBAN;
   }
 
   public function hesap_hareketleri($tarih){
@@ -34,12 +36,12 @@ class Garanti {
 			 <odem:BranchNum></odem:BranchNum>
 			 <odem:AccountNum></odem:AccountNum>
 			 <!--Optional:-->
-			 <odem:IBAN></odem:IBAN>
+			 <odem:IBAN>'$this->IBAN'</odem:IBAN>
 			 <odem:TransactionId></odem:TransactionId>
 		  </odem:FirmAccountActivity>
 	   </soapenv:Body>
 	    </soapenv:Envelope>';
-      $ch = curl_init($url);
+      $ch = curl_init($this->url);
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
       curl_setopt($ch, CURLOPT_POST, 1);
@@ -48,7 +50,11 @@ class Garanti {
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
       $response = curl_exec($ch);
       curl_close($ch);
-      return $output;
+      $response = str_replace('<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soapenv:Body>', '', $response);
+      $response = str_replace('</soapenv:Body></soapenv:Envelope>', '', $response);
+      $arr = simplexml_load_string($response);
+
+      return $arr;
   }
 
 
