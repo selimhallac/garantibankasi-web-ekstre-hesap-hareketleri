@@ -9,17 +9,15 @@ class Garanti {
   public $kurumKodu = "";
   public $parola = "";
   public $token = "";
-  public $IBAN = "";
   public $url = "https://inboundrstintws.garanti.com.tr/services/FirmAccountActivitySoap";
-  function __construct($kurumkodu,$parola,$key,$IBAN)
+  function __construct($kurumkodu,$parola,$key)
   {
     $this->kurumKodu = $kurumkodu;
     $this->parola = $parola;
     $this->token = $key;
-    $this->IBAN = $IBAN;
   }
 
-  public function hesap_hareketleri($tarih){
+  public function hesap_hareketleri($tarih,$IBAN){
     $data = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:odem="http://odemeler.garanti.com.tr/">
 	   <soapenv:Header/>
 	   <soapenv:Body>
@@ -36,7 +34,7 @@ class Garanti {
 			 <odem:BranchNum></odem:BranchNum>
 			 <odem:AccountNum></odem:AccountNum>
 			 <!--Optional:-->
-			 <odem:IBAN>'$this->IBAN'</odem:IBAN>
+			 <odem:IBAN>'.$IBAN.'</odem:IBAN>
 			 <odem:TransactionId></odem:TransactionId>
 		  </odem:FirmAccountActivity>
 	   </soapenv:Body>
